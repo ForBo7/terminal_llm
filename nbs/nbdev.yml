@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "terminal_llm"
+  site-url: "https://ForBo7.github.io/terminal_llm"
+  description: "A simple app to access MistralAI from the terminal."
+  repo-branch: main
+  repo-url: "https://github.com/ForBo7/terminal_llm"
