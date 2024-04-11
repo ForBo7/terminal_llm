@@ -5,4 +5,4 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://ForBo7.github.io',
                 'git_url': 'https://github.com/ForBo7/terminal_llm',
                 'lib_path': 'terminal_llm'},
-  'syms': {'terminal_llm.core': {'terminal_llm.core.foo': ('core.html#foo', 'terminal_llm/core.py')}}}
+  'syms': {'terminal_llm.chat': {'terminal_llm.chat.foo': ('chat.html#foo', 'terminal_llm/chat.py')}}}
