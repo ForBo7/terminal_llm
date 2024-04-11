@@ -5,4 +5,7 @@ d = { 'settings': { 'branch': 'main',
                 'doc_host': 'https://ForBo7.github.io',
                 'git_url': 'https://github.com/ForBo7/terminal_llm',
                 'lib_path': 'terminal_llm'},
-  'syms': {'terminal_llm.chat': {}}}
+  'syms': { 'terminal_llm.chat': { 'terminal_llm.chat.Chat': ('chat.html#chat', 'terminal_llm/chat.py'),
+                                   'terminal_llm.chat.Chat.__call__': ('chat.html#chat.__call__', 'terminal_llm/chat.py'),
+                                   'terminal_llm.chat.Chat.__init__': ('chat.html#chat.__init__', 'terminal_llm/chat.py'),
+                                   'terminal_llm.chat.Chat.write_history': ('chat.html#chat.write_history', 'terminal_llm/chat.py')}}}
