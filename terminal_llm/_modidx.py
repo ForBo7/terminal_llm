@@ -8,4 +8,10 @@ d = { 'settings': { 'branch': 'main',
   'syms': { 'terminal_llm.chat': { 'terminal_llm.chat.Chat': ('chat.html#chat', 'terminal_llm/chat.py'),
                                    'terminal_llm.chat.Chat.__call__': ('chat.html#chat.__call__', 'terminal_llm/chat.py'),
                                    'terminal_llm.chat.Chat.__init__': ('chat.html#chat.__init__', 'terminal_llm/chat.py'),
-                                   'terminal_llm.chat.Chat.write_history': ('chat.html#chat.write_history', 'terminal_llm/chat.py')}}}
+                                   'terminal_llm.chat.Chat.write_history': ('chat.html#chat.write_history', 'terminal_llm/chat.py')},
+            'terminal_llm.interface': { 'terminal_llm.interface.UserInterface': ( 'interface.html#userinterface',
+                                                                                  'terminal_llm/interface.py'),
+                                        'terminal_llm.interface.UserInterface.__init__': ( 'interface.html#userinterface.__init__',
+                                                                                           'terminal_llm/interface.py'),
+                                        'terminal_llm.interface.UserInterface.start_chat': ( 'interface.html#userinterface.start_chat',
+                                                                                             'terminal_llm/interface.py')}}}
