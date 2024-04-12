@@ -22,12 +22,11 @@ class UserInterface:
 
       while True:
         choice = input('... ')
-        match choice:
-          case '0': self.settings()
-          case '1': self.start_chat()
-          case '2': self.previous_chats()
-          case '3': break
-          case  _ : print('Invalid choice.')
+        if   choice == '0': self.settings()
+        elif choice == '1': self.start_chat()
+        elif choice == '2': self.previous_chats()
+        elif choice == '3': break
+        else              : print('Invalid choice.')
                 
         # TODO: Implement full processing on exit term.
         # if user_input.lower() == 'quit': break
