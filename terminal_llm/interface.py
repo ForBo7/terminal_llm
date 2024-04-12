@@ -4,13 +4,15 @@
 __all__ = ['UserInterface']
 
 # %% ../nbs/01_interface.ipynb 3
+from fastcore.all import *
 from .chat import Chat
 
 # %% ../nbs/01_interface.ipynb 4
 class UserInterface:
     def __init__(self, api_key, model): self.chat = Chat(api_key, model)
     
-    def start_app(self): pass
+    def start_app(self):
+      pass
 
     def menu(self):
       # TODO: Implement first time check.
@@ -39,11 +41,11 @@ class UserInterface:
         print("1 – Change Model")
         print("2 – Back")
         choice = input('... ')
-        match choice:
-          case '0': self.change_api_key()
-          case '1': self.change_model()
-          case '2': pass
-          case  _ : print('Invalid choice.')
+        # match choice:
+        #   case '0': self.change_api_key()
+        #   case '1': self.change_model()
+        #   case '2': pass
+        #   case  _ : print('Invalid choice.')
     
     def start_chat(self):
         print("Start Chat")
