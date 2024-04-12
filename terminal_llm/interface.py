@@ -7,7 +7,7 @@ __all__ = ['UserInterface']
 from fastcore.all import *
 from .chat import Chat
 
-# %% ../nbs/01_interface.ipynb 8
+# %% ../nbs/01_interface.ipynb 7
 class UserInterface:
     def __init__(self, api_key, model): self.chat = Chat(api_key, model)
     
@@ -36,7 +36,6 @@ class UserInterface:
       
 
     def menu(self):
-      # TODO: Implement first time check.
       print("Welcome to the chat interface. Type 'quit' to exit.")
       print("0 – Settings")
       print("1 – Start Chat")
@@ -57,16 +56,23 @@ class UserInterface:
         # print(f"Assistant: {response}")
 
     def settings(self):
-        print("Settings")
-        print("0 – Change API Key")
-        print("1 – Change Model")
-        print("2 – Back")
-        choice = input('... ')
-        # match choice:
-        #   case '0': self.change_api_key()
-        #   case '1': self.change_model()
-        #   case '2': pass
-        #   case  _ : print('Invalid choice.')
+      print("Settings")
+      print("0 – Change API Key")
+      print("1 – Change Model")
+      print("2 – Back")
+      choice = input('... ')
+      
+      if   choice == '0':
+        api_key = input('Enter API Key: ')
+        with open('.storage/api_key.txt', 'w') as f: f.write(api_key)
+        print('API key saved.')
+      elif choice == '1':
+        model = input('Enter Model: ')
+        with open('.storage/model.txt', 'w') as f: f.write(model)
+        print('Model saved.')
+      elif choice == '2': pass
+      else							: print('Invalid choice.')
+      
     
     def start_chat(self):
         print("Start Chat")
