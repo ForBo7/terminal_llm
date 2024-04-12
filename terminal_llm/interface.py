@@ -7,12 +7,21 @@ __all__ = ['UserInterface']
 from fastcore.all import *
 from .chat import Chat
 
-# %% ../nbs/01_interface.ipynb 4
+# %% ../nbs/01_interface.ipynb 6
 class UserInterface:
     def __init__(self, api_key, model): self.chat = Chat(api_key, model)
     
     def start_app(self):
-      pass
+      if Path('.storage').exists():
+        with open('.storage/api_key.txt', 'r') as f: api_key = f.read()
+        with open('.storage/model.txt', 'r') as f: model = f.read()
+      else:
+        Path('.storage').mkdir(parents=True, exist_ok=True)
+        api_key = input('Enter API Key: ')
+        model = input('Enter Model: ')
+        with open('.storage/api_key.txt', 'w') as f: f.write(api_key)
+        with open('.storage/model.txt', 'w') as f: f.write(model)
+      
 
     def menu(self):
       # TODO: Implement first time check.
