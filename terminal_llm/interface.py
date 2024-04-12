@@ -7,7 +7,7 @@ __all__ = ['UserInterface']
 from fastcore.all import *
 from .chat import Chat
 
-# %% ../nbs/01_interface.ipynb 6
+# %% ../nbs/01_interface.ipynb 7
 class UserInterface:
     def __init__(self, api_key, model): self.chat = Chat(api_key, model)
     
