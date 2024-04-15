@@ -9,12 +9,11 @@ from .chat import Chat
 
 # %% ../nbs/02_session_handler.ipynb 4
 class SessionHandler():
-  def __init__(self): pass
+  def __init__(self, interface):
+    store_attr()
+    self.is_running = True
   
   def start_app(self):
-    print('Starting app...')
-    # TODO: Implement loading animation.
-    
     if Path('.storage').exists():
       self.read_api_key()
       self.read_model()
@@ -22,11 +21,23 @@ class SessionHandler():
       Path('.storage').mkdir()
       self.set_api_key()
       self.set_model()
-
-    print('No errors found. Starting menu...')
+  
+  def process_menu(self, choice):
+    if   choice == '0': self.is_running = False
+    elif choice == '1': self.interface.settings()
+    elif choice == '2': self.start_chat()
+    elif choice == '3': pass # previous chats
+    else							: print("Invalid choice.")
+  
+  def process_settings(self, choice):
+    if   choice == '0': pass
+    elif choice == '1': self.set_api_key()
+    elif choice == '2': self.set_model()
+    else							: print('Invalid choice.')
   
   def start_chat(self):
     print('Starting chat...')
+    # TODO: Print out assistant greeting.
     self.chat = Chat(self.api_key, self.model)
     while True:
       user_input = input('You: ')
@@ -37,16 +48,16 @@ class SessionHandler():
     
 
   def read_model(self):
-      try: self.model = self.read_file('.storage/model.txt')
-      except FileNotFoundError: 
-        print('Model not found.')
-        self.set_model()
+    try: self.model = self.read_file('.storage/model.txt')
+    except FileNotFoundError: 
+      print('Model not found.')
+      self.set_model()
 
   def read_api_key(self):
-      try: self.api_key = self.read_file('.storage/api_key.txt')
-      except FileNotFoundError: 
-        print("API key not found.")
-        self.set_api_key()
+    try: self.api_key = self.read_file('.storage/api_key.txt')
+    except FileNotFoundError: 
+      print("API key not found.")
+      self.set_api_key()
 
   def set_model(self):
       # TODO: Add a check to see whether entered model exists.

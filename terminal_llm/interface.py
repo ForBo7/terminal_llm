@@ -8,48 +8,46 @@ from fastcore.all import *
 from .chat import Chat
 from .session_handler import SessionHandler
 
-# %% ../nbs/01_interface.ipynb 7
+# %% ../nbs/01_interface.ipynb 8
 class UserInterface:
   """An interface that simply passes all input on to the appropriate classes."""
   def __init__(self): 
-    self.handler = SessionHandler()
+    self.handler = SessionHandler(self)
+    print('Starting app...')
+    # TODO: Implement loading animation.
     self.handler.start_app()
+    print('Starting menu...')
     
-
   def menu(self):
-    print("Welcome to the chat interface. Type 'quit' to exit.")
-    print("0 – Settings")
-    print("1 – Start Chat")
-    print("2 – Previous Chats")
-    print("3 – Exit")
-
-    while True:
-      choice = input('... ')
-      if   choice == '0': self.settings()
-      elif choice == '1': self.handler.start_chat()
-      elif choice == '2': self.previous_chats()
-      elif choice == '3': break
-      else              : print('Invalid choice.')
-              
-      # TODO: Implement full processing on exit term.
-      # if user_input.lower() == 'quit': break
-      # response = self.chat(user_input)
-      # print(f"Assistant: {response}")
-
+    while self.handler.is_running:
+      self.show_menu_items()
+      choice = input('You: ')
+      self.handler.process_menu(choice)
+    print('Closing app...')
+  
   def settings(self):
-    print("Settings")
-    print("0 – Change API Key")
-    print("1 – Change Model")
-    print("2 – Back")
-    choice = input('... ')
-    
-    if   choice == '0': self.handler.set_api_key()
-    elif choice == '1': self.handler.set_model()
-    elif choice == '2': pass
-    else							: print('Invalid choice.')
+    self.show_settings_items()
+    choice = input('You: ')
+    self.handler.process_settings(choice)
+  
+  def show_menu_items(self):
+    print('''
+    Welcome to chat inteface.
+    0 - Exit
+    1 - Settings
+    2 - Start Chat
+    3 - Previous Chats
+    ''')
+  
+  def show_settings_items(self):
+    print('''
+    Settings
+    0 - Back
+    1 - Set API Key
+    2 - Set Model
+    ''')
   
   def save_chat(self): pass
-    
   
   def previous_chats(self): pass
 
