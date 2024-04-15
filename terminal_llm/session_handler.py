@@ -11,33 +11,34 @@ class SessionHandler():
   def start_app(self):
     print('Starting app...')
     # TODO: Implement loading animation.
+    
     if Path('.storage').exists():
-      try:
-        self.api_key = self.read_file('.storage/api_key.txt')
+      try: self.api_key = self.read_file('.storage/api_key.txt')
       except FileNotFoundError: 
-        # TODO: Add a check to see whether entered API key is valid.
-        self.api_key = input('API key not found. Enter API Key: ')
-        self.write_file('.storage/api_key.txt', self.api_key)
-        print('API key saved.')
-      
-      try:
-        self.model = self.read_file('.storage/model.txt')
+        print("API key not found.")
+        self.set_api_key()
+      try: self.model = self.read_file('.storage/model.txt')
       except FileNotFoundError: 
-        # TODO: Add a check to see whether entered model exists.
-        self.model = input('Model not found. Enter Model: ')
-        self.write_file('.storage/model.txt', self.model)
-        print('Model saved.')
+        print('Model not found.')
+        self.set_model()
     else:
       Path('.storage').mkdir()
-      self.api_key = input('Enter API Key: ')
-      self.write_file('.storage/api_key.txt', self.api_key)
-      print('API key saved.')
+      self.set_api_key()
+      self.set_model()
 
+    print('No errors found. Starting menu...')
+
+  def set_model(self):
+      # TODO: Add a check to see whether entered model exists.
       self.model = input('Enter Model: ')
       self.write_file('.storage/model.txt', self.model)
       print('Model saved.')
 
-    print('No errors found. Starting menu...')
+  def set_api_key(self):
+      # TODO: Add a check to see whether entered API key is valid.
+      self.api_key = input('Enter API Key: ')
+      self.write_file('.storage/api_key.txt', self.api_key)
+      print('API key saved.')
 
   def read_file(self, f_path):
     with open(f_path, 'r') as f: return f.read()
