@@ -13,20 +13,26 @@ class SessionHandler():
     # TODO: Implement loading animation.
     
     if Path('.storage').exists():
-      try: self.api_key = self.read_file('.storage/api_key.txt')
-      except FileNotFoundError: 
-        print("API key not found.")
-        self.set_api_key()
-      try: self.model = self.read_file('.storage/model.txt')
-      except FileNotFoundError: 
-        print('Model not found.')
-        self.set_model()
+      self.read_api_key()
+      self.read_model()
     else:
       Path('.storage').mkdir()
       self.set_api_key()
       self.set_model()
 
     print('No errors found. Starting menu...')
+
+  def read_model(self):
+      try: self.model = self.read_file('.storage/model.txt')
+      except FileNotFoundError: 
+        print('Model not found.')
+        self.set_model()
+
+  def read_api_key(self):
+      try: self.api_key = self.read_file('.storage/api_key.txt')
+      except FileNotFoundError: 
+        print("API key not found.")
+        self.set_api_key()
 
   def set_model(self):
       # TODO: Add a check to see whether entered model exists.

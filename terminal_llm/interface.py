@@ -50,7 +50,6 @@ class UserInterface:
     
   
   def start_chat(self):
-    # TODO: Hook up .storage files to Chat class.
     print("Start Chat")
     with open('.storage/api_key.txt', 'r') as f: api_key = f.read()
     with open('.storage/model.txt', 'r') as f: model = f.read()
