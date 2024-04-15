@@ -9,19 +9,24 @@ from .chat import Chat
 
 # %% ../nbs/01_interface.ipynb 7
 class UserInterface:
-    def __init__(self, api_key, model): self.chat = Chat(api_key, model)
+    def __init__(self): pass
     
     def start_app(self):
+      # TODO: Perhaps shift to constructor?
+      # TODO: Encrypt files.
+      print('Starting app...')
       if Path('.storage').exists():
         try:
           with open('.storage/api_key.txt', 'r') as f: api_key = f.read
         except FileNotFoundError: 
+          # TODO: Add a check to see whether entered API key is valid.
           api_key = input('API key not found. Enter API Key: ')
           with open('.storage/api_key.txt', 'w') as f: f.write(api_key)
           print('API key saved.')
         try:
           with open('.storage/model.txt', 'r') as f: model = f.read
         except FileNotFoundError: 
+          # TODO: Add a check to see whether entered model exists.
           model = input('Model not found. Enter Model: ')
           with open('.storage/model.txt', 'w') as f: f.write(model)
           print('Model saved.')
@@ -33,6 +38,7 @@ class UserInterface:
         model = input('Enter Model: ')
         with open('.storage/model.txt', 'w') as f: f.write(model)
         print('Model saved.')
+      print('No errors found. Starting menu...')
       
 
     def menu(self):
@@ -64,9 +70,11 @@ class UserInterface:
       
       if   choice == '0':
         api_key = input('Enter API Key: ')
+        # TODO: Add a check to see whether entered API key is valid.
         with open('.storage/api_key.txt', 'w') as f: f.write(api_key)
         print('API key saved.')
       elif choice == '1':
+        # TODO: Add a check to see whether entered model exists.
         model = input('Enter Model: ')
         with open('.storage/model.txt', 'w') as f: f.write(model)
         print('Model saved.')
@@ -75,9 +83,13 @@ class UserInterface:
       
     
     def start_chat(self):
+        # TODO: Hook up .storage files to Chat class.
         print("Start Chat")
+        with open('.storage/api_key.txt', 'r') as f: api_key = f.read()
+        with open('.storage/model.txt', 'r') as f: model = f.read()
+        self.chat = Chat(api_key, model)
         while True:
-          user_input = input('... ')
+          user_input = input('You: ')
           if user_input.lower() == 'quit': break
           response = self.chat(user_input)
           print(f"Assistant: {response}")
