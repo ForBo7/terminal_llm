@@ -6,39 +6,13 @@ __all__ = ['UserInterface']
 # %% ../nbs/01_interface.ipynb 3
 from fastcore.all import *
 from .chat import Chat
+from .session_handler import SessionHandler
 
 # %% ../nbs/01_interface.ipynb 7
 class UserInterface:
-    def __init__(self): pass
-    
-    def start_app(self):
-      # TODO: Perhaps shift to constructor?
-      # TODO: Encrypt files.
-      print('Starting app...')
-      if Path('.storage').exists():
-        try:
-          with open('.storage/api_key.txt', 'r') as f: api_key = f.read
-        except FileNotFoundError: 
-          # TODO: Add a check to see whether entered API key is valid.
-          api_key = input('API key not found. Enter API Key: ')
-          with open('.storage/api_key.txt', 'w') as f: f.write(api_key)
-          print('API key saved.')
-        try:
-          with open('.storage/model.txt', 'r') as f: model = f.read
-        except FileNotFoundError: 
-          # TODO: Add a check to see whether entered model exists.
-          model = input('Model not found. Enter Model: ')
-          with open('.storage/model.txt', 'w') as f: f.write(model)
-          print('Model saved.')
-      else:
-        Path('.storage').mkdir()
-        api_key = input('Enter API Key: ')
-        with open('.storage/api_key.txt', 'w') as f: f.write(api_key)
-        print('API key saved.')
-        model = input('Enter Model: ')
-        with open('.storage/model.txt', 'w') as f: f.write(model)
-        print('Model saved.')
-      print('No errors found. Starting menu...')
+    def __init__(self): 
+      self.handler = SessionHandler()
+      self.handler.start_app()
       
 
     def menu(self):
@@ -83,16 +57,19 @@ class UserInterface:
       
     
     def start_chat(self):
-        # TODO: Hook up .storage files to Chat class.
-        print("Start Chat")
-        with open('.storage/api_key.txt', 'r') as f: api_key = f.read()
-        with open('.storage/model.txt', 'r') as f: model = f.read()
-        self.chat = Chat(api_key, model)
-        while True:
-          user_input = input('You: ')
-          if user_input.lower() == 'quit': break
-          response = self.chat(user_input)
-          print(f"Assistant: {response}")
+      # TODO: Hook up .storage files to Chat class.
+      print("Start Chat")
+      with open('.storage/api_key.txt', 'r') as f: api_key = f.read()
+      with open('.storage/model.txt', 'r') as f: model = f.read()
+      self.chat = Chat(api_key, model)
+      while True:
+        user_input = input('You: ')
+        if user_input.lower() == 'quit': break
+        response = self.chat(user_input)
+        print(f"Assistant: {response}")
+    
+    def save_chat(self): pass
+      
     
     def previous_chats(self):
         print("Previous Chats")
