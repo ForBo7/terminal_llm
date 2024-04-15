@@ -152,3 +152,7 @@ checklink/cookies.txt
 
 # API Key
 api_key.txt
+
+# Program Files
+nbs/.storage
+terminal_llm/.storage
