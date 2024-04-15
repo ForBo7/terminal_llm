@@ -26,7 +26,7 @@ class UserInterface:
     while True:
       choice = input('... ')
       if   choice == '0': self.settings()
-      elif choice == '1': self.start_chat()
+      elif choice == '1': self.handler.start_chat()
       elif choice == '2': self.previous_chats()
       elif choice == '3': break
       else              : print('Invalid choice.')
@@ -47,18 +47,6 @@ class UserInterface:
     elif choice == '1': self.handler.set_model()
     elif choice == '2': pass
     else							: print('Invalid choice.')
-    
-  
-  def start_chat(self):
-    print("Start Chat")
-    with open('.storage/api_key.txt', 'r') as f: api_key = f.read()
-    with open('.storage/model.txt', 'r') as f: model = f.read()
-    self.chat = Chat(api_key, model)
-    while True:
-      user_input = input('You: ')
-      if user_input.lower() == 'quit': break
-      response = self.chat(user_input)
-      print(f"Assistant: {response}")
   
   def save_chat(self): pass
     

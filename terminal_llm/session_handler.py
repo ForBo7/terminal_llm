@@ -5,6 +5,9 @@ __all__ = ['SessionHandler']
 
 # %% ../nbs/02_session_handler.ipynb 3
 from fastcore.all import *
+from .chat import Chat
+
+# %% ../nbs/02_session_handler.ipynb 4
 class SessionHandler():
   def __init__(self): pass
   
@@ -21,6 +24,17 @@ class SessionHandler():
       self.set_model()
 
     print('No errors found. Starting menu...')
+  
+  def start_chat(self):
+    print('Starting chat...')
+    self.chat = Chat(self.api_key, self.model)
+    while True:
+      user_input = input('You: ')
+      if user_input.lower().strip() == '\\exit': break
+      else: 
+        response = self.chat(user_input)
+        print(f'Assistant: {response}')
+    
 
   def read_model(self):
       try: self.model = self.read_file('.storage/model.txt')
