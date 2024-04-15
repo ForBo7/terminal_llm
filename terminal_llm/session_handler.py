@@ -14,6 +14,7 @@ class SessionHandler():
     self.is_running = True
   
   def start_app(self):
+    # TODO: Check wifi is connected.
     if Path('.storage').exists():
       self.read_api_key()
       self.read_model()
@@ -60,8 +61,8 @@ class SessionHandler():
       self.set_api_key()
 
   def set_model(self):
-      # TODO: Add a check to see whether entered model exists.
-      self.model = input('Enter Model: ')
+      self.model = input('Enter model: ')
+      while self.model not in ['open-mistral-7b', 'open-mixtral-8x7b', 'mistral-small-latest', 'mistral-medium-latest', 'mistral-large-latest']: self.model = input('Invalid model. Enter model: ')
       self.write_file('.storage/model.txt', self.model)
       print('Model saved.')
 
