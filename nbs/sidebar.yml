@@ -2,4 +2,7 @@ website:
   sidebar:
     contents:
       - index.ipynb
-      - 00_core.ipynb
+      - 00_chat.ipynb
+      - 01_interface.ipynb
+      - 02_session_handler.ipynb
+      - 03_run.ipynb

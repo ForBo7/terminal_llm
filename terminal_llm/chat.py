@@ -3,28 +3,46 @@
 # %% auto 0
 __all__ = ['Chat']
 
-# %% ../nbs/00_chat.ipynb 14
+# %% ../nbs/00_chat.ipynb 5
+import requests
+
+# %% ../nbs/00_chat.ipynb 11
 from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage
 
-# %% ../nbs/00_chat.ipynb 48
+# %% ../nbs/00_chat.ipynb 43
+from fastcore.all import *
 class Chat:
-  def __init__(self, api_key, model):
+  '''A class for interacting with the MistralClient API.'''
+  
+  def __init__(self, api_key, model, history=[]):
     '''Initialize the class.'''
     self.client = MistralClient(api_key=api_key)
-    self.model = model
-    self.history = []
+    store_attr()
 
-
-  def __call__(self, query): 
+  def __call__(self, query, save_history=True): 
     '''Send a query to the model and return the response.'''
+    if self.is_connected(): pass
+    else: return 'Connection failed. Please check your interent.'
     messages = self.history + [ChatMessage(role='user', content=query)]
     response = self.client.chat(model=self.model, messages=messages).choices[0].message.content
-    self.write_history(query, response)
+    if save_history: self.write_history(query, response)
     return response
-  
   
   def write_history(self, query, response):
     '''Store the query and response in the history.'''
     self.history.append(ChatMessage(role='user', content=query))
     self.history.append(ChatMessage(role='assistant', content=response))
+
+  def is_connected(self):
+    '''Check if connection is available.'''
+    try: requests.get('https://api.mistral.ai/v1/chat/completions', timeout=5)
+    except (requests.ConnectionError, requests.Timeout) as e: 
+      return False
+    else: return True
+  
+  def set_name(self):
+    '''Set the name of the conversation.'''
+    if self.name: pass
+    else: self.name = self('Provide a title for our conversation.', save_history=False).strip('"')
+

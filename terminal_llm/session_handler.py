@@ -4,78 +4,117 @@
 __all__ = ['SessionHandler']
 
 # %% ../nbs/02_session_handler.ipynb 3
+import requests
 from fastcore.all import *
 from .chat import Chat
 
-# %% ../nbs/02_session_handler.ipynb 4
+# %% ../nbs/02_session_handler.ipynb 12
 class SessionHandler():
+  '''Handles application session by managing user input and output.'''
   def __init__(self, interface):
+    '''Initializes session handler.'''
     store_attr()
     self.is_running = True
   
   def start_app(self):
-    # TODO: Check wifi is connected.
+    '''Starts the application. If storage directory exists, reads API key and model. Otherwise, prompts user to set API key and model.'''
     if Path('.storage').exists():
       self.read_api_key()
       self.read_model()
     else:
-      Path('.storage').mkdir()
+      Path('.storage/chats').mkdir(parents=True)
       self.set_api_key()
       self.set_model()
   
   def process_menu(self, choice):
+    '''Processes menu choice.'''
     if   choice == '0': self.is_running = False
     elif choice == '1': self.interface.settings()
     elif choice == '2': self.start_chat()
-    elif choice == '3': pass # previous chats
-    else							: print("Invalid choice.")
+    elif choice == '3': self.interface.previous_chats()
+    else:               print("Invalid choice.")
   
   def process_settings(self, choice):
+    '''Processes settings choice.'''
     if   choice == '0': pass
     elif choice == '1': self.set_api_key()
     elif choice == '2': self.set_model()
-    else							: print('Invalid choice.')
+    else: 
+      print('Invalid choice.')
+      self.interface.settings()
   
-  def start_chat(self):
-    print('Starting chat...')
-    # TODO: Print out assistant greeting.
-    self.chat = Chat(self.api_key, self.model)
+  def process_previous_chats(self, choice):
+    '''Processes previous chats choice. If chat is found, resumes chat. Otherwise, prompts user to select another chat.'''
+    if choice == '0': pass
+    else:
+      result = globtastic('.storage/chats', file_glob=f'{choice}. *')
+      if result: 
+        name = Path(result[0]).stem
+        print(f'Resuming {name}.')
+        self.start_chat(load_pickle(result[0]), chat_name=name)
+      else: 
+        print('Chat not found.')
+        self.interface.previous_chats()
+  
+  def start_chat(self, history=[], chat_name=None):
+    '''Starts chat session.'''
+    print('Chat started. Type \\exit to end chat.')
+    self.chat = Chat(self.api_key, self.model, history)
     while True:
-      user_input = input('You: ')
-      if user_input.lower().strip() == '\\exit': break
+      user_input = input('\nYou: ')
+      if user_input.strip() == '\\exit':
+        if chat_name:
+          save_pickle(f'.storage/chats/{chat_name}.pkl', self.chat.history)
+        else:
+          num_chat = len(Path('.storage/chats').ls()) + 1
+          # History from prior chats keeps persisting for some reason.
+          # chat_name = self.chat('Provide a concise title for this conversation.', save_history=False).strip('"')
+          chat_name = input('Name this conversation: ').strip()
+          save_pickle(f'.storage/chats/{num_chat}. {chat_name}.pkl', self.chat.history)
+        break
       else: 
         response = self.chat(user_input)
         print(f'Assistant: {response}')
     
-
   def read_model(self):
+    '''Reads model from file. If file not found, prompts user to set model.'''
     try: self.model = self.read_file('.storage/model.txt')
     except FileNotFoundError: 
       print('Model not found.')
       self.set_model()
 
   def read_api_key(self):
+    '''Reads API key from file. If file not found, prompts user to set API key.'''
     try: self.api_key = self.read_file('.storage/api_key.txt')
     except FileNotFoundError: 
       print("API key not found.")
       self.set_api_key()
 
   def set_model(self):
-      self.model = input('Enter model: ')
-      while self.model not in ['open-mistral-7b', 'open-mixtral-8x7b', 'mistral-small-latest', 'mistral-medium-latest', 'mistral-large-latest']: self.model = input('Invalid model. Enter model: ')
-      self.write_file('.storage/model.txt', self.model)
-      print('Model saved.')
+    '''Prompts user to set model and saves it to file.'''
+    self.model = input('Enter model: ').strip()
+    while self.model not in ['open-mistral-7b', 'open-mixtral-8x7b', 'mistral-small-latest', 'mistral-medium-latest', 'mistral-large-latest']: self.model = input('Invalid model. Enter model: ')
+    self.write_file('.storage/model.txt', self.model)
+    print('Model saved.')
 
   def set_api_key(self):
-      # TODO: Add a check to see whether entered API key is valid.
-      self.api_key = input('Enter API Key: ')
-      self.write_file('.storage/api_key.txt', self.api_key)
-      print('API key saved.')
+    '''Prompts user to set API key and saves it to file.'''
+    self.api_key = input('Enter API Key: ')
+    while not self.check_api_key(): self.api_key = input('Invalid API key. Enter API Key: ')
+    self.write_file('.storage/api_key.txt', self.api_key)
+    print('API key saved.')
 
   def read_file(self, f_path):
+    '''Reads file and returns content.'''
     with open(f_path, 'r') as f: return f.read()
   
   def write_file(self, f_path, content):
+    '''Writes content to file.'''
     with open(f_path, 'w') as f: f.write(content)
   
-  
+  def check_api_key(self):
+    '''Checks if API key is valid.'''
+    h = {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': f'Bearer {self.api_key}'}
+    d = {'model': 'open-mistral-7b', 'messages': [{'role': 'user', 'content': 'THIS IS AN API KEY TEST!'}]}
+    r = requests.post('https://api.mistral.ai/v1/chat/completions', headers=h, json=d)
+    return True if r.status_code == 200 else False
